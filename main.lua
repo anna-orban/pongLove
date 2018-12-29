@@ -10,6 +10,7 @@ function love.load()
     paddle1Y = 10
     paddle2X = love.graphics.getWidth() - paddle1X - paddleWidth
     paddle2Y = 10
+    paddleSpeed = 300
 end
 
 function love.update(dt)
@@ -35,6 +36,24 @@ function love.update(dt)
         ballY = love.graphics.getHeight()
         ballSpeedY = -ballSpeedY
     end 
+
+    
+    if love.keyboard.isDown('w') then
+        paddle1Y = paddle1Y - paddleSpeed * dt
+    end
+    if love.keyboard.isDown('s') then
+        paddle1Y = paddle1Y + paddleSpeed * dt
+    end
+    if love.keyboard.isDown('up') then
+        paddle2Y = paddle2Y - paddleSpeed * dt
+    end
+    if love.keyboard.isDown('down') then
+        paddle2Y = paddle2Y + paddleSpeed * dt
+    end
+
+    paddle1Y = math.clamp(paddle1Y, 0, love.graphics.getHeight() - paddleHeight)
+    paddle2Y = math.clamp(paddle2Y, 0, love.graphics.getHeight() - paddleHeight)
+
 end
 
 function love.draw()
@@ -43,4 +62,8 @@ function love.draw()
 
     love.graphics.rectangle('fill', paddle1X, paddle1Y, paddleWidth, paddleHeight)
     love.graphics.rectangle('fill', paddle2X, paddle2Y, paddleWidth, paddleHeight)
+end
+
+function math.clamp(value, min, max) 
+    return math.max(math.min(value, max), min)
 end
