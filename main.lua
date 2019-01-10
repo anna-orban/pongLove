@@ -54,6 +54,7 @@ function love.update(dt)
     paddle1Y = math.clamp(paddle1Y, 0, love.graphics.getHeight() - paddleHeight)
     paddle2Y = math.clamp(paddle2Y, 0, love.graphics.getHeight() - paddleHeight)
 
+    checkCollision()
 end
 
 function love.draw()
@@ -66,4 +67,24 @@ end
 
 function math.clamp(value, min, max) 
     return math.max(math.min(value, max), min)
+end
+
+function checkCollision()
+    if  ballX < paddle1X + paddleWidth and
+        ballX + ballRad >paddle1X and
+        ballY < paddle1Y + paddleHeight and
+        ballY + ballRad < paddle1Y 
+    then
+        ballX = paddle1X + paddleWidth
+        ballSpeedX = -ballSpeedX
+    end
+    
+    if  ballX < paddle2X + paddleWidth and
+        ballX + ballRad > paddle2X and
+        ballY < paddle2Y + paddleHeight and
+        ballY + ballRad > paddle2Y 
+    then
+        ballX = paddle2X - ballRad
+        ballSpeedX = -ballSpeedX
+    end
 end
