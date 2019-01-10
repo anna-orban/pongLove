@@ -1,9 +1,7 @@
 function love.load()
-    ballX = love.graphics.getWidth() / 2
-    ballY = love.graphics.getHeight() / 2
+    resetBall()
     ballRad = 5
-    ballSpeedX, ballSpeedY = love.math.random(100,200), love.math.random(100,200)
-
+    
     paddleWidth = 10
     paddleHeight = 80
     paddle1X = 30
@@ -11,20 +9,23 @@ function love.load()
     paddle2X = love.graphics.getWidth() - paddle1X - paddleWidth
     paddle2Y = 10
     paddleSpeed = 300
+
+    player1Score = 0
+    player2Score = 0
 end
 
 function love.update(dt)
     ballX = ballX + ballSpeedX * dt
     ballY = ballY + ballSpeedY * dt
 
-    if ballX < 0 then 
-        ballX = 0
-        ballSpeedX = -ballSpeedX
+    if ballX + ballRad < 0 then 
+        resetBall()
+        player2Score = player2Score + 1
     end
 
     if ballX > love.graphics.getWidth() then
-        ballX = love.graphics.getWidth()
-        ballSpeedX = -ballSpeedX
+        resetBall()
+        player1Score = player1Score + 1
     end
 
     if ballY < 0 then
@@ -63,6 +64,9 @@ function love.draw()
 
     love.graphics.rectangle('fill', paddle1X, paddle1Y, paddleWidth, paddleHeight)
     love.graphics.rectangle('fill', paddle2X, paddle2Y, paddleWidth, paddleHeight)
+
+    love.graphics.print('Player 1: ' .. player1Score, 10, 10)
+    love.graphics.print('Player 2: ' .. player2Score, love.graphics.getWidth() - 75, 10)
 end
 
 function math.clamp(value, min, max) 
@@ -71,7 +75,7 @@ end
 
 function checkCollision()
     if  ballX < paddle1X + paddleWidth and
-        ballX + ballRad >paddle1X and
+        ballX + ballRad > paddle1X and
         ballY < paddle1Y + paddleHeight and
         ballY + ballRad < paddle1Y 
     then
@@ -87,4 +91,10 @@ function checkCollision()
         ballX = paddle2X - ballRad
         ballSpeedX = -ballSpeedX
     end
+end
+
+function resetBall()
+    ballX = love.graphics.getWidth() / 2
+    ballY = love.graphics.getHeight() / 2
+    ballSpeedX, ballSpeedY = love.math.random(100, 200), love.math.random(100, 200)
 end
