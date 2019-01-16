@@ -77,7 +77,7 @@ function checkCollision()
     if  ballX < paddle1X + paddleWidth and
         ballX + ballRad > paddle1X and
         ballY < paddle1Y + paddleHeight and
-        ballY + ballRad < paddle1Y 
+        ballY + ballRad > paddle1Y 
     then
         ballX = paddle1X + paddleWidth
         ballSpeedX = -ballSpeedX
