@@ -13,7 +13,7 @@ function love.load()
     player1Score = 0
     player2Score = 0
 
-    currentState = 'mainGame'
+    currentState = 'mainMenu'
 end
 
 function love.update(dt)
@@ -23,8 +23,29 @@ function love.update(dt)
 end
 
 function love.draw()
-    if currentState == 'mainGame' then
+    if currentState == 'mainMenu' then
+        drawMainMenuState()
+    elseif currentState == 'ready' then
+        drawReadyState()
+    elseif currentState == 'mainGame' then
         drawMainGameState()
+    elseif currentState == 'endGame' then
+        drawEndGameState()
+    end
+end
+
+function love.keypressed(key)
+    if key == 'space' then
+        if currentState == 'mainMenu' then
+            currentState = 'ready'
+        elseif currentState == 'ready' then
+            currentState = 'mainGame'
+        elseif currentState == 'endGame' then
+            currentState = 'mainMenu'
+        end
+    end
+    if key == 'escape' then
+        love.event.quit()
     end
 end
 
@@ -35,11 +56,13 @@ function updateMainGameState(dt)
     if ballX + ballRad < 0 then 
         resetBall()
         player2Score = player2Score + 1
+        currentState = 'ready'
     end
 
     if ballX > love.graphics.getWidth() then
         resetBall()
         player1Score = player1Score + 1
+        currentState = 'ready'
     end
 
     if ballY < 0 then
@@ -81,6 +104,18 @@ function drawMainGameState()
 
     love.graphics.print('Player 1: ' .. player1Score, 10, 10)
     love.graphics.print('Player 2: ' .. player2Score, love.graphics.getWidth() - 75, 10)
+end
+
+function drawMainMenuState()
+    love.graphics.print('Main menu\nPress space to begin match', 10, 10)
+end
+
+function drawReadyState()
+    love.graphics.print('Ready?\nPress space to serve', 10, 10)
+end
+
+function drawEndGameState()
+    love.graphics.print('Game Over\nPress space to return to main menu', 10, 10)
 end
 
 function math.clamp(value, min, max) 
