@@ -12,9 +12,23 @@ function love.load()
 
     player1Score = 0
     player2Score = 0
+
+    currentState = 'mainGame'
 end
 
 function love.update(dt)
+    if currentState == 'mainGame' then
+        updateMainGameState(dt)
+    end
+end
+
+function love.draw()
+    if currentState == 'mainGame' then
+        drawMainGameState()
+    end
+end
+
+function updateMainGameState(dt)
     ballX = ballX + ballSpeedX * dt
     ballY = ballY + ballSpeedY * dt
 
@@ -58,7 +72,7 @@ function love.update(dt)
     checkCollision()
 end
 
-function love.draw()
+function drawMainGameState()
     love.graphics.circle('fill', ballX, ballY, ballRad)
     love.graphics.print(string.format("%.0f", ballX), 10, 10)
 
