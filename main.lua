@@ -1,19 +1,21 @@
 function love.load()
-    resetBall()
+    resetMainGameState()
     ballRad = 5
     
     paddleWidth = 10
     paddleHeight = 80
     paddle1X = 30
-    paddle1Y = 10
+    paddle1Y = love.graphics.getHeight() / 2 - paddleHeight
     paddle2X = love.graphics.getWidth() - paddle1X - paddleWidth
-    paddle2Y = 10
+    paddle2Y = love.graphics.getHeight() / 2 - paddleHeight    
     paddleSpeed = 300
 
     player1Score = 0
     player2Score = 0
+    maxScore = 2
 
     currentState = 'mainMenu'
+    gameOverMessage = ''
 end
 
 function love.update(dt)
@@ -54,15 +56,25 @@ function updateMainGameState(dt)
     ballY = ballY + ballSpeedY * dt
 
     if ballX + ballRad < 0 then 
-        resetBall()
+        resetMainGameState()
         player2Score = player2Score + 1
-        currentState = 'ready'
+        if player2Score >= maxScore then
+            currentState = 'endGame'
+            gameOverMessage = 'Player 2 wins!\nPress space to return to main menu'
+        else
+            currentState = 'ready'
+        end
     end
 
     if ballX > love.graphics.getWidth() then
-        resetBall()
+        resetMainGameState()
         player1Score = player1Score + 1
-        currentState = 'ready'
+        if player1Score >= maxScore then
+            currentState = 'endGame'
+            gameOverMessage = 'Player 1 wins!\nPress space to return to main menu'
+        else 
+            currentState = 'ready'
+        end
     end
 
     if ballY < 0 then
@@ -115,7 +127,7 @@ function drawReadyState()
 end
 
 function drawEndGameState()
-    love.graphics.print('Game Over\nPress space to return to main menu', 10, 10)
+    love.graphics.print(gameOverMessage, 10, 10)
 end
 
 function math.clamp(value, min, max) 
@@ -142,8 +154,11 @@ function checkCollision()
     end
 end
 
-function resetBall()
+function resetMainGameState()
     ballX = love.graphics.getWidth() / 2
     ballY = love.graphics.getHeight() / 2
     ballSpeedX, ballSpeedY = love.math.random(100, 200), love.math.random(100, 200)
+    if love.math.random() > 0.5 then
+        ballSpeedX = ballSpeedX * -1
+    end
 end
